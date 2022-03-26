@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+
+    <button class = "btn" onClick="window.location.reload();">RESTART</button>
+    
+    <style>
+        .btn {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 5px;
+            cursor: pointer;
+            position: absolute;
+            background-image: linear-gradient(to right, #16A085 0%, #F4D03F  51%, #16A085  100%);
+            background-size: 200% auto;           
+            
+            border-radius: 10px;
+
+        }
+
+        .btn:hover {
+            background-position: right center; /* change the direction of the change here */
+            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 0 20px #eee;
+          }
+
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
+    <script src="words.js"></script>
+
+    <script>
+    const reloadtButton = document.querySelector("#reload");
+// Reload everything:
+    function reload() { 
+    reload = location.reload();
+    }
+// Event listeners for reload
+    reloadButton.addEventListener("click", reload, false);
+
+    //appear button when game is over
+    function appear() {
+        document.getElementById("button").style.display = "none";
+    }
+
+    </script>
+
+
+    <script>
+        let playerSize = 80
+        let score = 0
+        let gameOver = false
+        let directions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
+        let enemies = []
+        let bullets = []
+        let heard = ''
+        let currentWords = {
+            UP: getRandomWord(),
+            DOWN: getRandomWord(),
+            LEFT: getRandomWord(),
+            RIGHT: getRandomWord()
+        }
+	
+class Particle {
+// setting the co-ordinates, radius and the
+// speed of a particle in both the co-ordinates axes.
+  constructor(){
+    this.x = random(0,width);
+    this.y = random(0,height);
+    this.r = random(1,8);
+    this.xSpeed = random(-2,2);
+    this.ySpeed = random(-1,1.5);
+  }
+
+// creation of a particle.
+  createParticle() {
+    noStroke();
+    fill('rgba(200,169,169,0.5)');
+    circle(this.x,this.y,this.r);
+  }
+
+// setting the particle in motion.
+  moveParticle() {
+    if(this.x < 0 || this.x > width)
+      this.xSpeed*=-1;
+    if(this.y < 0 || this.y > height)
+      this.ySpeed*=-1;
+    this.x+=this.xSpeed;
+    this.y+=this.ySpeed;
+  }
+
+// this function creates the connections(lines)
+// between particles which are less than a certain distance apart
+  joinParticles(particles) {
+    particles.forEach(element =>{
+      let dis = dist(this.x,this.y,element.x,element.y);
+      if(dis<85) {
+        stroke('rgba(255,255,255,0.07)');
+        line(this.x,this.y,element.x,element.y);
+      }
+    });
+  }
+}
+// an array to add multiple particles
+let particles = [];
+
+
+        function setup() {
+            createCanvas(1000, 700)
+	    fill(40, 200, 40);
+	    noStroke();
+	    
+            frameRate(30)
+            setInterval(() => {
+                enemies.push(new Enemy(random(directions), width/4, width/2))
+            }, random(2000, 5000))
+	    
+	    img = loadImage('rocket1.png');
+	    img2 = loadImage('rocket2.png');
+	    img3 = loadImage('rocket3.png');
+	    img4 = loadImage('rocket4.png');
+	    imag = loadImage('meteor.png');
+	    bg = loadImage('Space.jpg'); 
+	    for(let i = 0;i<width/10;i++){
+    	    particles.push(new Particle());
+  	}
+	    
+        }
+
+        function draw() {
+	   
+	    background(bg);
+
+	    	for(let i = 0;i<particles.length;i++) {
+    		particles[i].createParticle();
+    		particles[i].moveParticle();
+   		particles[i].joinParticles(particles.slice(i));
+  	}
+            translate(width/2, height/2)
+
+            fill('white')
+            textSize(24)
+            textAlign(RIGHT)
+            text(`SCORE: ${score}`, width/2-20, height/2-20)
+
+            if(!gameOver) {
+		    /// rocket
+		    image(img, -40, -40, playerSize, playerSize);
+			//rotate img to face the direction of bullets
+			if(bullets.length > 0) {
+
+				for(let i = 0; i < bullets.length; i++) {
+					if(bullets[i].direction == 'UP') {
+					image(img,-40,-40, playerSize, playerSize);
+					}
+			
+					else if(bullets[i].direction == 'DOWN') {
+					image(img3,-40, -40, playerSize, playerSize);		
+					}
+
+					else if(bullets[i].direction == 'LEFT') {
+					image(img4,-40, -40, playerSize, playerSize);	
+					} 
+
+					else if(bullets[i].direction == 'RIGHT') {
+					image(img2,-40, -40, playerSize, playerSize);	
+					}
+				}
+				
+			}
+
+
+                for(let enemy of enemies) {
+                    enemy.move()
+                    enemy.touchedPlayer()
+                    enemy.display()
+                }
+
+                for(let bullet of bullets) {
+                    if(!bullet.spent) {
+                        bullet.move()
+                        bullet.touchedEnemy()
+                        bullet.display()
+                    }
+                }
+			/// words
+                fill('red')
+                textSize(20)
+                textAlign(CENTER)
+                text(currentWords.UP, 0, -height/2+48)
+                text(currentWords.DOWN, 0, height/2-48)
+                textAlign(RIGHT)
+                text(currentWords.RIGHT, width/2-48, 0)
+                textAlign(LEFT)
+                text(currentWords.LEFT, -width/2+48, 0)
+
+                fill('green')
+
+                if(heard) 
+		text(`We heard "${heard}"`, -width/2+20, height/2-20)
+
+
+
+
+            } else {
+		    //game over text
+                fill('yellow')
+                textSize(36)
+                textAlign(CENTER)
+                text(`GAME OVER
+	Score: ${score}`, 0, 0)
+
+    function appear() {
+        document.getElementById("button").style.display = "block";
+    }
+
+            }
+        }
+
+       
+
+        class Enemy {
+            constructor(direction, distance) {
+                this.direction = direction
+                this.size = 25
+                this.x = 0
+                this.y = 0
+
+                if(this.direction == 'UP') this.y = -Math.abs(distance)
+                if(this.direction == 'RIGHT') this.x = distance
+                if(this.direction == 'DOWN') this.y = distance
+                if(this.direction == 'LEFT') this.x = -Math.abs(distance)
+            }
+
+            move() {
+                if(this.direction == 'UP') this.y++
+                if(this.direction == 'RIGHT') this.x--
+                if(this.direction == 'DOWN') this.y--
+                if(this.direction == 'LEFT') this.x++
+            }
+
+            touchedPlayer() {
+                const d = dist(this.x, this.y, 0, 0)
+                if(d < (playerSize/2) + (this.size/2)) gameOver = true
+            }
+
+            display() {
+		    // grey circle
+                image(imag, this.x, this.y, this.size, this.size);
+                
+            }
+        }
+
+        class Bullet {
+            constructor(direction) {
+                this.direction = direction
+                this.size = 7
+                this.speed = 6
+                this.x = 0
+                this.y = 0
+                this.spent = false
+            }
+	    	////
+            move() {
+                if(this.direction == 'UP') 
+		this.y -= this.speed
+
+                if(this.direction == 'RIGHT')
+		this.x += this.speed
+		
+                if(this.direction == 'DOWN') 
+		this.y += this.speed
+
+                if(this.direction == 'LEFT') 
+		this.x -= this.speed
+		
+            }
+
+	    
+            touchedEnemy() {
+                for(let enemy of enemies) {
+                    const d = dist(enemy.x, enemy.y, this.x, this.y)
+                    if(d < (this.size/2) + (enemy.size/2)) {
+                        enemies = enemies.filter(e => e != enemy)
+                        this.spent = true
+                        score++
+                        currentWords[enemy.direction] = getRandomWord()
+                    }
+                }
+            }
+
+            display() {
+		    //bullets
+                fill('red')
+                ellipse(this.x, this.y, this.size)
+            }
+        }
+
+        function getRandomWord() {
+            return words[Math.floor(Math.random() * 20)]
+        }
+        //
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Browser not supported')
+            const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
+            const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [ 'token', '3b8ee01b38f80dc60fcca8209e50c5dc8803d220' ])
+
+            socket.onopen = () => {
+                mediaRecorder.addEventListener('dataavailable', async (event) => {
+                    if (event.data.size > 0 && socket.readyState == 1) socket.send(event.data)
+                })
+                mediaRecorder.start(1000)
+            }
+
+            socket.onmessage = (message) => {
+                const received = JSON.parse(message.data)
+                const transcript = received.channel.alternatives[0].transcript
+                if (transcript && received.is_final) {
+                    heard = transcript
+                    for(let direction in currentWords) {
+			    ////
+                        if(transcript.includes(currentWords[direction])) {
+                            bullets.push(new Bullet(direction))
+			    ////
+			    
+
+
+
+
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+</html>
+
