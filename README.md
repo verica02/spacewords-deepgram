@@ -1,6 +1,8 @@
-# spacewords-deepgram
+# SpaceWords 🚀 ☄️
 
-SpaceWords game with voice control, made with p5.js and Deepgram
+Play SpaceWords game with voice control, made with p5.js and Deepgram
+
+
 
 
 
