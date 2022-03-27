@@ -310,7 +310,7 @@ let particles = [];
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Browser not supported')
             const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
-            const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [ 'token', '3b8ee01b38f80dc60fcca8209e50c5dc8803d220' ])
+            const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [ 'token', 'YOUR_DEEPGRAM_API_HERE' ])
 
             socket.onopen = () => {
                 mediaRecorder.addEventListener('dataavailable', async (event) => {
