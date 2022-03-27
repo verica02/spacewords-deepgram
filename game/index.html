@@ -3,61 +3,15 @@
 <head></head>
 <body>
 
-    <button class = "btn" onClick="window.location.reload();">RESTART</button>
-    
-    <style>
-        .btn {
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 5px 5px;
-            cursor: pointer;
-            position: absolute;
-            background-image: linear-gradient(to right, #16A085 0%, #F4D03F  51%, #16A085  100%);
-            background-size: 200% auto;           
-            
-            border-radius: 10px;
-
-        }
-
-        .btn:hover {
-            background-position: right center; /* change the direction of the change here */
-            color: #fff;
-            text-decoration: none;
-            box-shadow: 0 0 20px #eee;
-          }
-
-    </style>
-
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.1/lib/p5.js"></script>
     <script src="words.js"></script>
-
-    <script>
-    const reloadtButton = document.querySelector("#reload");
-// Reload everything:
-    function reload() { 
-    reload = location.reload();
-    }
-// Event listeners for reload
-    reloadButton.addEventListener("click", reload, false);
-
-    //appear button when game is over
-    function appear() {
-        document.getElementById("button").style.display = "none";
-    }
-
-    </script>
-
 
     <script>
         let playerSize = 80
         let score = 0
         let gameOver = false
         let directions = ['UP', 'DOWN', 'LEFT', 'RIGHT']
+        let restartcommand = ['RESTART']
         let enemies = []
         let bullets = []
         let heard = ''
@@ -66,7 +20,12 @@
             DOWN: getRandomWord(),
             LEFT: getRandomWord(),
             RIGHT: getRandomWord()
+            
         }
+        let currentrestart = {
+            RESTART:getrestart()
+        }
+
 	
 class Particle {
 // setting the co-ordinates, radius and the
@@ -108,7 +67,7 @@ class Particle {
     });
   }
 }
-// an array to add multiple particles
+
 let particles = [];
 
 
@@ -151,9 +110,9 @@ let particles = [];
             text(`SCORE: ${score}`, width/2-20, height/2-20)
 
             if(!gameOver) {
-		    /// rocket
+		    
 		    image(img, -40, -40, playerSize, playerSize);
-			//rotate img to face the direction of bullets
+			
 			if(bullets.length > 0) {
 
 				for(let i = 0; i < bullets.length; i++) {
@@ -210,16 +169,12 @@ let particles = [];
 
 
             } else {
-		    //game over text
+		
                 fill('yellow')
                 textSize(36)
                 textAlign(CENTER)
                 text(`GAME OVER
 	Score: ${score}`, 0, 0)
-
-    function appear() {
-        document.getElementById("button").style.display = "block";
-    }
 
             }
         }
@@ -292,6 +247,7 @@ let particles = [];
                         this.spent = true
                         score++
                         currentWords[enemy.direction] = getRandomWord()
+                        currentrestart[enemy.direction] = getrestart()
                     }
                 }
             }
@@ -306,7 +262,12 @@ let particles = [];
         function getRandomWord() {
             return words[Math.floor(Math.random() * 20)]
         }
-        //
+        
+        function getrestart()
+        {
+            return restart[Math.floor(Math.random() * 1)]
+            
+        }
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Browser not supported')
             const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
@@ -329,10 +290,20 @@ let particles = [];
                         if(transcript.includes(currentWords[direction])) {
                             bullets.push(new Bullet(direction))
 			    ////
-			    
 
-
-
+                        }
+                    }
+                    for(let direction in currentrestart) {
+			    ////
+                        if(transcript.includes(currentrestart[direction])) {
+                            bullets.push(new Bullet(direction))
+                            //refresh website
+                            if(gameOver || !gameOver)
+                            {
+                                 window.location.reload();
+                            }
+                           
+			  
 
                         }
                     }
@@ -342,4 +313,5 @@ let particles = [];
     </script>
 </body>
 </html>
+
 
