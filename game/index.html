@@ -149,7 +149,7 @@ let particles = [];
                         bullet.display()
                     }
                 }
-			/// words
+			// words
                 fill('red')
                 textSize(20)
                 textAlign(CENTER)
@@ -219,7 +219,7 @@ let particles = [];
                 this.y = 0
                 this.spent = false
             }
-	    	////
+	    	
             move() {
                 if(this.direction == 'UP') 
 		this.y -= this.speed
@@ -283,18 +283,18 @@ let particles = [];
                 if (transcript && received.is_final) {
                     heard = transcript
                     for(let direction in currentWords) {
-			    ////
+			   
                         if(transcript.includes(currentWords[direction])) {
                             bullets.push(new Bullet(direction))
-			    ////
+			    
 
                         }
                     }
                     for(let direction in currentrestart) {
-			    ////
+			    
                         if(transcript.includes(currentrestart[direction])) {
                             bullets.push(new Bullet(direction))
-                            //refresh website
+                            
                             if(gameOver || !gameOver)
                             {
                                  window.location.reload();
