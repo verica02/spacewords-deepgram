@@ -164,11 +164,9 @@ let particles = [];
 
                 if(heard) 
 		text(`We heard "${heard}"`, -width/2+20, height/2-20)
-
-
-
-
-            } else {
+		} 
+		
+		else {
 		
                 fill('yellow')
                 textSize(36)
@@ -179,7 +177,6 @@ let particles = [];
             }
         }
 
-       
 
         class Enemy {
             constructor(direction, distance) {
