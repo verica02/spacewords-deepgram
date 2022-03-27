@@ -204,7 +204,7 @@ let particles = [];
             }
 
             display() {
-		    // grey circle
+		   
                 image(imag, this.x, this.y, this.size, this.size);
                 
             }
@@ -286,8 +286,7 @@ let particles = [];
 			   
                         if(transcript.includes(currentWords[direction])) {
                             bullets.push(new Bullet(direction))
-			    
-
+			   
                         }
                     }
                     for(let direction in currentrestart) {
@@ -300,7 +299,6 @@ let particles = [];
                                  window.location.reload();
                             }
                            
-			  
 
                         }
                     }
