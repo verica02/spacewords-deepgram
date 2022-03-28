@@ -7,7 +7,7 @@ SpaceWords game with voice control, made with p5.js and Deepgram
 - If the game is over or you want to restart the game, say restart to play again
 
 
-![Alt Text](https://media.giphy.com/media/KUb7AlvJmEm7bImaP9/giphy-downsized-large.gif)
+![Alt Text](https://media.giphy.com/media/atwR2lKl02LBQDbLt8/giphy.gif)
 
 # Demo
 https://space-words.netlify.app/
