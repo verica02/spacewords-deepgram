@@ -4,3 +4,7 @@ const words = [
 	   "atmosphere", "binary", "dust", "light",  "space", "asteroid", "meteor",
 	
     ];
+
+const restart = [
+	"restart"
+    ];
