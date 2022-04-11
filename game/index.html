@@ -23,13 +23,12 @@
             
         }
         let currentrestart = {
-            RESTART:getrestart()
+            RESTART:getRestart()
         }
 
 	
 class Particle {
-// setting the co-ordinates, radius and the
-// speed of a particle in both the co-ordinates axes.
+
   constructor(){
     this.x = random(0,width);
     this.y = random(0,height);
@@ -45,7 +44,7 @@ class Particle {
     circle(this.x,this.y,this.r);
   }
 
-// setting the particle in motion.
+
   moveParticle() {
     if(this.x < 0 || this.x > width)
       this.xSpeed*=-1;
@@ -55,8 +54,7 @@ class Particle {
     this.y+=this.ySpeed;
   }
 
-// this function creates the connections(lines)
-// between particles which are less than a certain distance apart
+
   joinParticles(particles) {
     particles.forEach(element =>{
       let dis = dist(this.x,this.y,element.x,element.y);
@@ -87,6 +85,17 @@ let particles = [];
 	    img4 = loadImage('rocket4.png');
 	    imag = loadImage('meteor.png');
 	    bg = loadImage('Space.jpg'); 
+
+        imag1 = loadImage('meteor1.png');
+        imag2 = loadImage('meteor2.png');
+        imag3 = loadImage('meteor3.png');
+        imag4 = loadImage('meteor4.png');
+
+        imag5 = loadImage('Picture1.png');
+            
+
+        
+        
 	    for(let i = 0;i<width/10;i++){
     	    particles.push(new Particle());
   	}
@@ -107,6 +116,7 @@ let particles = [];
             fill('white')
             textSize(24)
             textAlign(RIGHT)
+            textStyle(BOLD);
             text(`SCORE: ${score}`, width/2-20, height/2-20)
 
             if(!gameOver) {
@@ -149,7 +159,7 @@ let particles = [];
                         bullet.display()
                     }
                 }
-			// words
+			
                 fill('red')
                 textSize(20)
                 textAlign(CENTER)
@@ -168,11 +178,13 @@ let particles = [];
 		
 		else {
 		
-                fill('yellow')
+                fill('black')
                 textSize(36)
                 textAlign(CENTER)
-                text(`GAME OVER
-	Score: ${score}`, 0, 0)
+                image(imag5, -width/2+20, -height/2+20, width-40, height-40)
+                textStyle(BOLD);
+                text(`GAME OVER 
+Score: ${score}`, 0, 0)
 
             }
         }
@@ -205,9 +217,82 @@ let particles = [];
 
             display() {
 		   
-                image(imag, this.x, this.y, this.size, this.size);
+             
+               
+                if(score == 0) {
+                    image(imag, this.x, this.y, this.size, this.size)
+                }
                 
-            }
+                if(score%2 == 0 && score%3!=0 && score%5!=0) {
+                    image(imag2, this.x, this.y, this.size, this.size);
+                }
+                if(score%3 == 0 && score%2 == 0 ) {
+                    
+                    image(imag3, this.x, this.y, this.size, this.size);
+                }
+                if(score%5 == 0 && score%2 == 0 && score%3 != 0) {
+                    
+                    image(imag2, this.x, this.y, this.size, this.size);
+                }
+                else{
+                    image(imag1, this.x, this.y, this.size, this.size);
+                }
+                
+        
+                if(score%2 != 0) {
+
+                 if (score%5 && score%3 != 0) {
+                    image(imag2, this.x, this.y, this.size, this.size);
+                }
+
+                if (score%3 == 0 && score%5 != 0) {
+                    image(imag4, this.x, this.y, this.size, this.size);
+                }
+                 else{
+                    image(imag3, this.x, this.y, this.size, this.size);
+                }
+                }
+
+                if (score > 7) {
+                    
+                    if(score%2 == 0 && score%3!=0 && score%5!=0) {
+                        
+                    image(imag2, this.x, this.y, this.size, this.size);
+                    
+                    if(score%3 == 0 && score%2 == 0 ) {
+                    this.size = 50
+                    image(imag3, this.x, this.y, this.size, this.size);
+                    }
+                    if(score%5 == 0 && score%2 == 0 && score%3 != 0) {
+                    this.size = 50
+                    image(imag4, this.x, this.y, this.size, this.size);
+                    }
+                    else{
+                    image(imag1, this.x, this.y, this.size, this.size);
+                }
+                }
+
+                if(score%2 != 0) {
+
+                 if (score%5 && score%3 != 0 ) {
+                     this.size = 80
+                    image(imag2, this.x, this.y, this.size, this.size);
+                }
+
+                if (score%3 == 0 && score%5 != 0 ) {
+                    image(imag4, this.x, this.y, this.size, this.size);
+                }
+                 else{
+                    image(imag3, this.x, this.y, this.size, this.size);
+                }
+
+            }}
+                if(score>30)
+                {
+                    this.size = 80;
+                }
+   
+        }
         }
 
         class Bullet {
@@ -242,25 +327,39 @@ let particles = [];
                     if(d < (this.size/2) + (enemy.size/2)) {
                         enemies = enemies.filter(e => e != enemy)
                         this.spent = true
-                        score++
+                        
+                        
+
+                        if(enemy.size == 50)
+                        {
+                            score+=3
+                        }
+                        if(enemy.size == 80)
+                        {
+                            score+=5
+                        }
+                        else
+                        {
+                            score+=1
+                        }
                         currentWords[enemy.direction] = getRandomWord()
-                        currentrestart[enemy.direction] = getrestart()
+                        currentrestart[enemy.direction] = getRestart()
                     }
                 }
             }
 
             display() {
-		    //bullets
+		    
                 fill('red')
                 ellipse(this.x, this.y, this.size)
             }
         }
 
         function getRandomWord() {
-            return words[Math.floor(Math.random() * 20)]
+            return words[Math.floor(Math.random() * 24)]
         }
         
-        function getrestart()
+        function getRestart()
         {
             return restart[Math.floor(Math.random() * 1)]
             
@@ -268,7 +367,7 @@ let particles = [];
         navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             if (!MediaRecorder.isTypeSupported('audio/webm')) return alert('Browser not supported')
             const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' })
-            const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [ 'token', 'YOUR_DEEPGRAM_API_HERE' ])
+            const socket = new WebSocket('wss://api.deepgram.com/v1/listen', [ 'token', '3b8ee01b38f80dc60fcca8209e50c5dc8803d220' ])
 
             socket.onopen = () => {
                 mediaRecorder.addEventListener('dataavailable', async (event) => {
@@ -308,5 +407,4 @@ let particles = [];
     </script>
 </body>
 </html>
-
 
